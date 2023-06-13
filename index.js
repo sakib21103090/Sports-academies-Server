@@ -90,12 +90,12 @@ async function run() {
     });
 
 // add class
-app.post("/addClass", async (req, res) => {
-  const body = req.body;
-  const result = await classesCollection.insertOne(body);
+// app.post("/addClass", async (req, res) => {
+//   const body = req.body;
+//   const result = await classesCollection.insertOne(body);
  
-  res.send(result);
-});
+//   res.send(result);
+// });
 
 // My Add class instructor
 app.get("/myClass/:email", async (req, res) => {
