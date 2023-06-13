@@ -40,6 +40,13 @@ async function run() {
     const usersCollection = client.db("Sports").collection("users");
     const classesCollection = client.db("Sports").collection("classes");
 
+
+    app.post('/jwt', (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_JWT, { expiresIn: '1h' })
+      res.send({ token })
+    })
+
     //  class information api
     app.get("/classes", async (req, res) => {
       const classes = await classesCollection.find({}).sort({availableSeats :-1}).toArray();
@@ -91,20 +98,20 @@ async function run() {
 
     })
 
-    app.patch('/users/instructor/:id', async (req, res) => {
-      const id = req.params.id;
-      console.log(id);
-      const filter = { _id: new ObjectId(id) };
-      const updateDoc = {
-        $set: {
-          role: 'instructor'
-        },
-      };
+    // app.patch('/users/instructor/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   console.log(id);
+    //   const filter = { _id: new ObjectId(id) };
+    //   const updateDoc = {
+    //     $set: {
+    //       role: 'instructor'
+    //     },
+    //   };
 
-      const result = await usersCollection.updateOne(filter, updateDoc);
-      res.send(result);
+    //   const result = await usersCollection.updateOne(filter, updateDoc);
+    //   res.send(result);
 
-    })
+    // })
   }
 }
 run().catch(console.dir);
