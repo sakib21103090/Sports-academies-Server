@@ -54,6 +54,7 @@ async function run() {
 
     const usersCollection = client.db("Sports").collection("users");
     const classesCollection = client.db("Sports").collection("classes");
+    const instructorCollection = client.db("Sports").collection("instructor");
 
 
     app.post('/jwt', (req, res) => {
@@ -69,14 +70,40 @@ async function run() {
         
       res.send(classes);
     });
+    app.get("/instructors", async (req, res) => {
+      const classes = await instructorCollection.find({}).toArray();
+        // .sort({ createdAt: -1 })
+        
+      res.send(classes);
+    });
     app.get("/class", async (req, res) => {
       const c = await classesCollection.find({}).limit(6).sort({availableSeats :-1}).toArray();
         // .sort({ createdAt: -1 })
         
       res.send(c);
     });
+    app.get("/instructor", async (req, res) => {
+      const c = await classesCollection.find({}).limit(6).toArray();
+        // .sort({ createdAt: -1 })
+        
+      res.send(c);
+    });
 
+// add class
+app.post("/addClass", async (req, res) => {
+  const body = req.body;
+  const result = await classesCollection.insertOne(body);
+ 
+  res.send(result);
+});
 
+// My Add class instructor
+app.get("/myClass/:email", async (req, res) => {
+  const cls = await classesCollection
+    .find({
+      instructorEmail: req.params.email,}).sort({price :1}).toArray();
+  res.send(cls);
+});
 
 // users Apis
     app.get('/users',async (req, res) => {
