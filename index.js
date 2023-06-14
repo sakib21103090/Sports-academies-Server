@@ -55,6 +55,7 @@ async function run() {
     const usersCollection = client.db("Sports").collection("users");
     const classesCollection = client.db("Sports").collection("classes");
     const instructorCollection = client.db("Sports").collection("instructor");
+    const cartsCollection = client.db("Sports").collection("carts");
 
 
     app.post('/jwt', (req, res) => {
@@ -63,6 +64,24 @@ async function run() {
       res.send({ token })
     })
 
+
+    // cats collection
+    app.get('/carts', async (req, res) => {
+      const email = req.query.email;
+
+      if (!email) {
+        res.send([]);
+      }
+      const query = { email: email };
+      const result = await cartsCollection.find(query).toArray();
+      res.send(result);
+    });
+
+    app.post('/carts', async (req, res) => {
+      const Class = req.body;
+      const result = await cartsCollection.insertOne(Class);
+      res.send(result);
+    })
     //  class information api
     app.get("/classes", async (req, res) => {
       const classes = await classesCollection.find({}).sort({availableSeats :-1}).toArray();
@@ -90,12 +109,12 @@ async function run() {
     });
 
 // add class
-// app.post("/addClass", async (req, res) => {
-//   const body = req.body;
-//   const result = await classesCollection.insertOne(body);
+app.post("/addClass", async (req, res) => {
+  const body = req.body;
+  const result = await classesCollection.insertOne(body);
  
-//   res.send(result);
-// });
+  res.send(result);
+});
 
 // My Add class instructor
 app.get("/myClass/:email", async (req, res) => {
